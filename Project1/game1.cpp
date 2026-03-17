@@ -56,6 +56,9 @@ int main() {
 	enemy.enemY = ground1.groundY - 40;
 	Rectangle playerRect;
 	Rectangle enemyRect;
+	float score = 0;
+	float scoreSpeed = 5;
+	float delta;
 
 
 	while (!WindowShouldClose()) {
@@ -71,6 +74,7 @@ int main() {
 			if (IsKeyPressed(KEY_P)) {
 				currentState = Pause;
 			}
+			delta = GetFrameTime();
 
 			if (IsKeyPressed(KEY_SPACE) && dinosaurus.isonGround) {
 				dinosaurus.velocity = -dinosaurus.jumpforce;
@@ -103,6 +107,7 @@ int main() {
 			if (CheckCollisionRecs(playerRect, enemyRect)) {
 				currentState = GameOver;
 			}
+			score += scoreSpeed * delta;
 			break;
 		case Pause:
 			if (IsKeyPressed(KEY_P)) {
@@ -114,6 +119,7 @@ int main() {
 				dinosaurus.playery = ground1.groundY - dinosaurus.playerheight;
 				dinosaurus.velocity = 0;
 				dinosaurus.isonGround = true;
+				score = 0;
 
 				// Reset Enemy
 				enemy.enemyX = WindowWidth; // vraćamo neprijatelja sa desne strane
@@ -138,11 +144,12 @@ int main() {
 			DrawRectangle(ground1.groundX, ground1.groundY, ground1.groundW, ground1.groundH, WHITE);
 			DrawRectangle(dinosaurus.playerx, dinosaurus.playery, dinosaurus.playerwidth, dinosaurus.playerheight, GREEN);
 			DrawRectangle(enemy.enemyX, enemy.enemY, enemy.enemyW, enemy.enemyH, RED);
+			DrawText(TextFormat("Score: %d", (int)score), 350, 200, 30, YELLOW);
 
 
 			break;
 		case Pause:
-			DrawText("Game is paused", WindowWidth / 2-200, WindowHeight / 2, 40, BLUE);
+			DrawText("Game is paused", WindowWidth / 2-150, WindowHeight / 2, 40, BLUE);
 			break;
 		case GameOver:
 			DrawText("You lost, press space to restart!", WindowWidth / 2 - 200, WindowHeight / 2, 30, RED);
